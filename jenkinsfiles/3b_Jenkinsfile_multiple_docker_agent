@@ -1,0 +1,19 @@
+pipeline {
+    agent none 
+    stages {
+        stage('build') {
+            agent { docker 'python:3.8' }
+            steps {
+                sh 'python --version'
+                sh 'echo Hello Jenkins'
+            }
+        }
+        stage('Example Test') {
+            agent { docker 'openjdk:8-jre' }
+            steps {
+                echo 'Hello, JDK'
+                sh 'java -version'
+            }
+        }
+    }
+}

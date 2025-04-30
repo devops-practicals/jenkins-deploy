@@ -1,0 +1,35 @@
+// Run a particular step if the build stage step fails.
+// Under post action failure will run, if any stage fails.
+
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo12345 "Fail!";'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo "Fail!";'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'I will always get executed :D'
+        }
+        success {
+            echo 'I will only get executed if this success'
+            // aws sns publish --sns-arn ARN_SNS --message "Jenkins Job with name $JOB_NAME has Succeeded with Build Number $BUILD_NUMBER"
+        }
+        failure {
+            echo "Notify all the DevOps Team Members"
+            echo 'I will only get executed if this fails'
+            // aws sns publish --sns-arn ARN_SNS --message "Jenkins Job with name $JOB_NAME has failed with Build Number $BUILD_NUMBER"
+        }
+        unstable {
+            echo 'I will only get executed if this is unstable'
+        }
+    }
+}
