@@ -3,10 +3,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'This is Build Stage.'
-                echo 'This is Jenkins Job'
-                sh '''echo "this is shell script step"
-                cd /var/lib/jenkins/workspace'''
+                sh 'echo "This is First Jenkins Pipeline"'
+                sh '''
+                    echo "This is step script"
+                    ls -ltr
+                    cd /var/lib/jenkins/workspace
+                    ls -ltr
+                '''
             }
         }
         stage('Test') {
