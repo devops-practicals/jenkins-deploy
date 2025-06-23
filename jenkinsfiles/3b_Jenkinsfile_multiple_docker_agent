@@ -2,7 +2,7 @@ pipeline {
     agent none 
     stages {
         stage('build') {
-            agent { docker 'python:3.8' }
+            agent { docker 'python:3.8-slim' }
             steps {
                 sh 'python --version'
                 sh 'echo Hello Jenkins'
