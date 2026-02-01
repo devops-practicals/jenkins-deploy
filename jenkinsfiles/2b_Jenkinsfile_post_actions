@@ -11,7 +11,10 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'echo123 "Fail!";'
+                sh 'echo "Fail!";'
+                timeout(time: 5, unit: 'SECONDS') {
+                    sh 'sleep 10'
+                }
             }
         }
     }
