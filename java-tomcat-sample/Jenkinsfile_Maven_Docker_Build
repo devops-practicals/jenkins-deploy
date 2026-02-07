@@ -1,0 +1,49 @@
+/*
+- This Jenkinsfile will create a Docker Image using the maven build and Push the Image to AWS ECR Repository
+*/
+
+pipeline {
+    agent any
+    tools {
+        maven 'Maven_Local'
+    }
+    parameters {
+        choice(name: 'AWS_REGION',choices: ['ap-south-1', 'us-east-1', 'us-west-1'],description: 'Enter the AWS Region')
+    }
+    stages {
+        stage('Maven Build Stage') {
+            steps {
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                dir("${env.WORKSPACE}/java-tomcat-sample"){
+                    sh "pwd"
+                    // sh "sed -i /s/SDLC_ENV/${params.SDLC_ENV}/ java-tomcat-sample/src/main/java/dao/GetDao.java"
+                    // sh 'mvn clean install -f pom.xml'
+                    sh 'mvn clean package -f pom.xml'
+                }
+            }
+        }
+        stage('Docker Image Build') {
+            steps {
+                echo 'Creating Docker Image'
+                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                sh 'echo Value of pwd is below:'
+                sh 'pwd'
+                sh 'bash $WORKSPACE/java-tomcat-sample/build_and_push.sh ${AWS_REGION}'
+                
+            }
+        }
+        // stage('DeployToDev') {
+        //     when {
+        //         environment name: 'SDLC_ENV', value: 'dev'
+        //     }
+        //     steps {
+        //         deploy adapters: [tomcat9(credentialsId: 'tomcat_creds', path: '', url: 'http://172.31.1.26:8080/')], contextPath: 'dev-java-tomcat-pipeline-sample', war: '**/*.war'
+        //     }
+        // }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'java-tomcat-sample/target/*.war', fingerprint: true
+        }
+    }
+}

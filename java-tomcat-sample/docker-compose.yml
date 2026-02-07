@@ -1,0 +1,11 @@
+version: '3'
+services:
+  maven:
+    image: test-docker-image:20
+    container_name: maven
+    ports:
+      - "80:8080"
+    environment:
+      - DB_ENDPOINT=12345678
+      - DB_USER=12345678
+      - DB_PASS=12345678
