@@ -1,13 +1,28 @@
+// Jenkins Pipeline Definition
+// This pipeline demonstrates usage of 'retry' and 'timeout' steps within a deployment stage.
+
 pipeline {
+    // 'agent any' tells Jenkins to run this pipeline on any available agent.
     agent any
+
     stages {
+        // Define the 'Deploy' stage of the pipeline.
         stage('Deploy') {
             steps {
+                // The 'retry' block will attempt the enclosed step up to 3 times if it fails.
+                // This is useful for commands that might fail intermittently.
                 retry(3) {
-                    sh 'echo123 hello'
+                    // Run a shell command. If it fails, Jenkins will retry up to 2 more times.
+                    // Replace 'echo12345 hello' with your actual deployment command.
+                    sh 'echo12345 hello'
                 }
-                timeout(time: 10, unit: 'SECONDS') {
-                    sh 'sleep 5'
+
+                // The 'timeout' block enforces a time limit for the enclosed step.
+                // If the step exceeds 5 seconds, Jenkins will abort it.
+                timeout(time: 5, unit: 'SECONDS') {
+                    // This command will sleep for 10 seconds, but will be interrupted after 5 seconds.
+                    // Useful for preventing long-running or stuck jobs.
+                    sh 'sleep 10'
                 }
             }
         }

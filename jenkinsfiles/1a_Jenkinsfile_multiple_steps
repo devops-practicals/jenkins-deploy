@@ -1,15 +1,38 @@
+/*
+This code is a Jenkins Pipeline script written in Groovy. It defines a CI/CD pipeline with three stages: Build, Test, and Deploy.
+*/
+/*
+pipeline { ... }: The top-level block that defines the Jenkins Pipeline.
+agent any: Specifies that the pipeline can run on any available Jenkins agent.
+stages { ... }: Contains the sequence of stages that make up the pipeline.
+stage('Build'):
+steps { ... }: Lists the actions to perform in this stage.
+echo 'This is Build Stage.': Prints a message to the console.
+echo 'This is Jenkins Job': Prints another message.
+sh ''' ... ''': Runs a shell script that prints a message and changes the directory to /var/lib/jenkins/workspace.
+stage('Test'):
+
+steps { ... }:
+echo 'This is Test Stage.': Prints a message indicating this is the test stage.
+stage('Deploy'):
+
+steps { ... }:
+echo 'This is Deploy Stage.': Prints a message indicating this is the deploy stage.
+Summary:
+This pipeline will run on any Jenkins agent and execute three sequential stages—Build, Test, and Deploy—each printing messages to the console. The Build stage also runs a shell script demonstrating how to execute shell commands in Jenkins.
+
+If you want further details or have questions about specific parts, let me know!
+*/
+
 pipeline {
     agent any
     stages {
         stage('Build') {
             steps {
-                sh 'echo "This is First Jenkins Pipeline"'
-                sh '''
-                    echo "This is step script"
-                    ls -ltr
-                    cd /var/lib/jenkins/workspace
-                    ls -ltr
-                '''
+                echo 'This is Build Stage.'
+                echo 'This is Jenkins Job'
+                sh '''echo "this is shell script step"
+                cd ${WORKSPACE}'''
             }
         }
         stage('Test') {

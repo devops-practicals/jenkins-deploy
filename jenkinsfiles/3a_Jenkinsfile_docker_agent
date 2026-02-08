@@ -11,3 +11,9 @@ pipeline {
         }
     }
 }
+
+// Notes:
+// - This declarative pipeline runs all steps inside the Docker image
+//   'python:3.11-slim'. Jenkins must have Docker installed and the
+//   agent node must allow Docker containers to be launched.
+// - Use additional stages (test, package, deploy) for a full CI flow.

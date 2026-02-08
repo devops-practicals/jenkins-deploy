@@ -1,17 +1,33 @@
 pipeline {
-    agent none 
+    // This pipeline uses per-stage Docker agents. The top-level
+    // `agent none` disables a global agent so each stage can select
+    // its own container image.
+    agent none
+
     stages {
+        // Build stage runs inside a Python container. Useful when
+        // build tools or scripts require a Python runtime.
         stage('build') {
-            agent { docker 'python:3.8-slim' }
+            // Per-stage Docker agent: runs the stage steps inside
+            // the 'python:3.11-slim' image.
+            agent { docker 'python:3.11-slim' }
             steps {
+                // Print the Python version available in the container
                 sh 'python --version'
+
+                // Simple demo output to show the stage executed
                 sh 'echo Hello Jenkins'
             }
         }
+
+        // Example Test stage runs inside a different container
+        // (OpenJDK) — demonstrates how stages can use different
+        // images as required by language/tooling needs.
         stage('Example Test') {
             agent { docker 'openjdk:8u342-jre' }
             steps {
-                echo 'Hello JDK'
+                // Display a message and the Java runtime version
+                echo 'Hello, JDK'
                 sh 'java -version'
             }
         }

@@ -1,23 +1,46 @@
 /*
-The when directive allows the Pipeline to determine whether the stage should be executed depending on the given condition.
+Jenkins Pipeline Example: Conditional Stage Execution Using 'when' Directive
+
+This pipeline demonstrates:
+- How to use the `when` directive to control whether a stage is executed based on environment variables.
+- How to set global environment variables for the pipeline.
+- How to structure multiple stages with conditional logic.
+
+How it works:
+- The pipeline defines a global environment variable SDLC_ENV and sets it to 'dev'.
+- The 'Example Build' stage always runs.
+- The 'Example Deploy' stage runs **only** if SDLC_ENV equals 'dev', thanks to the `when` condition.
+
+Best Practices:
+- Use the `when` directive to manage stage execution for different environments (e.g., dev, qa, prod).
+- Centralize environment variable definitions in the pipeline for clarity and maintainability.
 */
+
 pipeline {
+    // Specifies the agent where the pipeline will run ('any' means use any available Jenkins agent).
     agent any
+
+    // Global environment variables, accessible in all stages.
     environment {
-        SDLC_ENV = 'qa'
+        SDLC_ENV = 'dev' // Set the software development life cycle environment.
     }
+
     stages {
+        // The 'Example Build' stage always runs.
         stage('Example Build') {
             steps {
-                echo 'Build Stage'
+                echo 'Build Stage' // Output build stage message.
             }
         }
+        // The 'Example Deploy' stage runs only if SDLC_ENV is 'dev'.
         stage('Example Deploy') {
+            // The 'when' block determines if this stage should run.
             when {
                 environment name: 'SDLC_ENV', value: 'dev'
+                // Only runs if the environment variable SDLC_ENV is set to 'dev'.
             }
             steps {
-                echo 'Deploying Code as SDLC_ENV value is dev'
+                echo 'Deploying Code as SDLC_ENV value is dev' // Output deploy stage message.
             }
         }
     }

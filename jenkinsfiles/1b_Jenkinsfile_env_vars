@@ -1,23 +1,42 @@
+// Jenkins Pipeline definition.
+// This pipeline demonstrates global and stage-specific environment variables
+// and the scoping rules between them.
+
 pipeline {
+    // 'agent any' means this pipeline can run on any available Jenkins agent.
     agent any
+
+    // Global environment variables, available in all stages unless overridden.
     environment {
-        TEST_ENV = 'dev'
+        TEST_ENV = 'dev' // Default value for TEST_ENV throughout the pipeline.
     }
+
     stages {
+        // First stage: Build
         stage('Build') {
+            // Stage-specific environment block.
+            // This overrides the global TEST_ENV for this stage only.
             environment {
-                TEST_ENV = 'qa'
+                TEST_ENV = 'qa' // TEST_ENV will be 'qa' inside this stage.
             }
             steps {
+                // Print all environment variables to the console.
                 sh 'printenv'
-                // TEST_ENV will be qa
+                
+                // Demonstrate the value of TEST_ENV in this stage.
+                // Should output: qa
                 sh 'echo $TEST_ENV inside Build Stage'
+                
+                // Accessing built-in Jenkins environment variables.
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
             }
         }
+
+        // Second stage: CheckEnv
         stage('CheckEnv') {
             steps {
-                // TEST_ENV will be dev
+                // Demonstrate the value of TEST_ENV in this stage.
+                // Will output: dev (the global value, since it's not overridden here)
                 sh 'echo $TEST_ENV inside CheckEnv'
             }
         }

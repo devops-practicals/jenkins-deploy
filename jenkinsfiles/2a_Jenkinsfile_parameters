@@ -1,23 +1,73 @@
 /*
-Jenkins parameters example to define the different parameter types in pipeline and use it in subsequent steps.
+Jenkins Pipeline Parameters Example
+
+This pipeline demonstrates how to:
+- Define various types of parameters in a Jenkins pipeline.
+- Access and use the parameter values in pipeline steps.
+
+Parameter Types Used:
+- string      : Accepts a single-line text string.
+- text        : Accepts multi-line text input.
+- booleanParam: Presents a true/false toggle.
+- choice      : Presents a dropdown menu with selectable options.
+- password    : Accepts sensitive input, hides value in UI and logs.
+
+Usage:
+When running the pipeline, Jenkins will prompt for these parameters.
+You can reference the values using `params.<PARAMETER_NAME>` in your steps.
+
+Best Practice:
+Avoid echoing sensitive parameters (like passwords) in logs for production pipelines.
+This example prints all parameter values for demonstration purposes only.
 */
+
 pipeline {
+    // Specifies that the pipeline can run on any available Jenkins agent.
     agent any
+
     parameters {
-        string(name: 'PERSON', defaultValue: 'AWS_DEVOPS', description: 'Who should I say hello to?')
-        text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
-        booleanParam(name: 'TOGGLE', defaultValue: true, description: 'Toggle this value')
-        choice(name: 'SDLC_ENV', choices: ['dev', 'qa', 'prod'], description: 'Pick something')
-        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+        // Single-line string parameter.
+        string(
+            name: 'PERSON',
+            defaultValue: 'AWS_DEVOPS',
+            description: 'Who should I say hello to?'
+        )
+        // Multi-line text parameter.
+        text(
+            name: 'BIOGRAPHY',
+            defaultValue: '',
+            description: 'Enter some information about the person'
+        )
+        // Boolean (true/false) parameter.
+        booleanParam(
+            name: 'TOGGLE',
+            defaultValue: true,
+            description: 'Toggle this value'
+        )
+        // Choice (dropdown) parameter.
+        choice(
+            name: 'SDLC_ENV',
+            choices: ['dev', 'qa', 'prod'],
+            description: 'Pick something'
+        )
+        // Password (hidden input) parameter.
+        password(
+            name: 'PASSWORD',
+            defaultValue: 'SECRET',
+            description: 'Enter a password'
+        )
     }
+
     stages {
         stage('Example') {
             steps {
+                // Print parameter values to the Jenkins log.
+                // NOTE: Avoid printing sensitive information like passwords in production!
                 echo "Hello ${params.PERSON}"
                 echo "Biography: ${params.BIOGRAPHY}"
                 echo "Toggle: ${params.TOGGLE}"
                 echo "Choice: ${params.SDLC_ENV}"
-                echo "Password: ${params.PASSWORD}"
+                echo "Password: ${params.PASSWORD}" // For demo only! Don't echo passwords in real pipelines.
             }
         }
     }
